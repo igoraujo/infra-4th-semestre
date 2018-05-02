@@ -1,0 +1,317 @@
+ROTEADOR
+------------
+WAN--
+****************
+ 0/0 out - 0/1 in
+****************
+[ROUTER 0 
+  enable
+  configure terminal
+  no ip domain lookup
+  interface serial 0/1
+  ip address 176.20.100.2 255.255.255.0
+  description WAN4_REDE4_REDE1
+  no shutdown
+  bandwidth 128
+  exit
+  exit  
+  copy r s
+  
+  enable
+  configure terminal
+  no ip domain lookup
+  interface serial 0/0
+  ip address 201.30.10.1 255.255.255.0
+  description WAN1_REDE1_REDE2
+  no shutdown
+  bandwidth 128
+  clock rate 128000
+  exit
+  exit
+  copy r s
+  
+]
+
+[ROUTER 1
+  enable
+  configure terminal
+  no ip domain lookup
+  interface serial 0/1
+  ip address 201.30.10.2 255.255.255.0
+  description WAN1_REDE1_REDE2
+  no shutdown
+  bandwidth 128
+  exit
+  exit
+  copy r s
+  
+  enable
+  configure terminal
+  no ip domain lookup
+  interface serial 0/0
+  ip address 8.8.8.1 255.255.255.0
+  description WAN2_REDE2_REDE3
+  no shutdown
+  bandwidth 128
+  clock rate 128000
+  exit
+  exit
+  copy r s
+ ]
+ 
+[ROUTER 2
+  enable
+  configure terminal
+  no ip domain lookup
+  interface serial 0/1
+  ip address 8.8.8.2 255.255.255.0
+  description WAN2_REDE2_REDE3
+  no shutdown
+  bandwidth 128
+  exit
+  exit
+  copy r s 
+
+  enable
+  configure terminal
+  no ip domain lookup
+  interface serial 0/0
+  ip address 116.24.13.1 255.255.255.0
+  description WAN3_REDE3_REDE4
+  no shutdown
+  bandwidth 128
+  clock rate 128000
+  exit
+  exit
+  copy r s 
+ ]
+ 
+ [ROUTER 3
+  enable
+  configure terminal
+  no ip domain lookup
+  interface serial 0/1
+  ip address 116.24.13.2 255.255.255.0
+  description WAN3_REDE3_REDE4
+  no shutdown
+  bandwidth 128
+  clock rate 128000
+  exit
+  exit
+  copy r s 
+  
+  enable
+  configure terminal
+  no ip domain lookup
+  interface serial 0/0
+  ip address 176.20.100.1 255.255.255.0
+  description WAN4_REDE4_REDE1
+  no shutdown
+  bandwidth 128
+  clock rate 128000
+  exit
+  exit
+  copy r s 
+ ]
+
+
+LAN--
+
+enable
+[ROUTER0
+  enable
+  configure terminal
+  no ip domain lookup
+  int f 0/0
+  ip address 172.10.0.1 255.255.0.0
+  no shutdown
+  exit
+  exit
+  copy r s
+]
+
+[ROUTER1
+  enable
+  configure terminal
+  no ip domain lookup
+  int f 0/0
+  ip address 172.20.0.1 255.255.0.0
+  no shutdown
+  exit
+  exit
+  copy r s
+]
+
+[ROUTER2
+  enable
+  configure terminal
+  no ip domain lookup
+  int f 0/0
+  ip address 172.30.0.1 255.255.0.0
+  no shutdown
+  exit
+  exit
+  copy r s
+]
+
+[ROUTER3
+  enable
+  configure terminal
+  no ip domain lookup
+  int f 0/0
+  ip address 172.40.0.1 255.255.0.0
+  no shutdown
+  exit
+  exit
+  copy r s
+]
+RIP
+------------
+REDE 1
+*******
+enable 
+configure terminal
+router rip
+network 201.30.10.0
+network 176.20.100.0
+network 172.10.0.0
+network 1.0.0.0
+exit
+exit
+copy r s
+
+REDE 2
+*******
+enable 
+configure terminal
+router rip
+network 201.30.10.0
+network 8.8.8.0
+network 172.20.0.0
+network 2.0.0.0
+exit
+exit
+copy r s
+
+REDE 3
+*******
+enable 
+configure terminal
+router rip
+network 8.8.8.0
+network 116.24.13.0
+network 172.30.0.0
+network 3.0.0.0
+exit
+exit
+copy r s
+
+
+REDE 4
+*******
+enable 
+configure terminal
+router rip
+network 116.24.13.0
+network 176.20.100.0
+network 172.40.0.0
+network 4.0.0.0
+exit
+exit
+copy r s
+
+
+ROUTER 4 (ROTEADOR DE REDISTRIBUICAO)
+*******
+
+enable
+configure terminal
+int s 1/0
+ip address 1.0.0.1 255.0.0.0
+no shutdown
+bandwidth 128
+
+int s 1/1
+ip address 1.0.0.1 255.0.0.0
+no shutdown
+bandwidth 128
+
+int s 1/2
+ip address 1.0.0.1 255.0.0.0
+no shutdown
+bandwidth 128
+
+int s 1/3
+ip address 1.0.0.1 255.0.0.0
+no shutdown
+bandwidth 128
+exit
+exit
+copy r s
+
+enable 
+configure terminal
+router rip
+network 1.0.0.0
+network 2.0.0.0
+network 3.0.0.0
+network 4.0.0.0
+redistribute static metric
+exit
+exit
+copy r s
+
+enable 
+configure terminal
+ip route 172.20.0.0 255.255.0.0 serial 1/0
+ip route 172.30.0.0 255.255.255.0 serial 1/1
+ip route 172.40.0.0 255.255.255.0 serial 1/2
+ip route 172.10.0.0 255.255.255.0 serial 1/3
+
+exit
+exit
+copy r s
+
+ESTATICO
+------------
+ip route <rede destino><mascara> serial <interface saída> (ex: ip route 10.0.0.0 255.0.0.0 serial 0/0)
+
+enable
+conf t
+int s 1/0
+ip address 1.0.0.2 255.0.0.0
+exit
+ip route 172.20.0.0 255.255.0.0 serial 0/0
+exit
+exit
+copy r s
+
+enable
+conf t
+int s 1/0
+ip address 2.0.0.2 255.0.0.0
+exit
+ip route 172.30.0.0 255.255.255.0 serial 0/0
+exit
+exit
+copy r s
+
+enable
+conf t
+int s 1/0
+ip address 3.0.0.2 255.0.0.0
+exit
+ip route 172.40.0.0 255.255.255.0 serial 0/0
+exit
+exit
+copy r s
+
+enable
+conf t
+int s 1/0 
+ip address 4.0.0.2 255.0.0.0
+exit
+ip route 172.10.0.0 255.255.255.0 serial 0/0
+exit
+exit
+copy r s
