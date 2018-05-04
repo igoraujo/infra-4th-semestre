@@ -1,0 +1,220 @@
+	LANS
+############
+REDE1
+********
+enable
+conf t
+ip domain lookup
+
+int f 0/0
+ip address  192.168.10.1 255.255.255.0
+description LAN1
+no shutdown
+exit
+exit
+copy r s
+
+
+REDE2
+********
+enable
+conf t
+ip domain lookup
+
+int f 0/0
+ip address  192.168.20.1 255.255.255.0
+description LAN2
+no shutdown
+exit
+exit
+copy r s
+
+
+REDE3
+********
+enable
+conf t
+ip domain lookup
+
+int f 0/0
+ip address  192.168.30.1 255.255.255.0
+description LAN3
+no shutdown
+exit
+exit
+copy r s
+
+
+REDE4
+********
+enable
+conf t
+ip domain lookup
+
+int f 0/0
+ip address  192.168.40.1 255.255.255.0
+description LAN4
+no shutdown
+exit
+exit
+copy r s
+
+
+	WANS
+############
+
+10.0.0.0/8 – REDISTRIBUIÇÃO – REDE 1
+************************************
+enable
+conf t
+no ip domain lookup
+int s 0/1
+ip address 10.0.0.2 255.0.0.0
+description WAN1
+no shutdown
+bandwidth 128
+exit
+exit  
+copy r s
+
+20.0.0.0/8 – REDISTRIBUIÇÃO – REDE 2
+************************************
+enable
+conf t
+no ip domain lookup
+int s 0/0
+ip address 20.0.0.1 255.0.0.0
+description WAN2
+no shutdown
+bandwidth 128
+exit
+exit  
+copy r s
+
+30.0.0.0/8 – REDISTRIBUIÇÃO – REDE 3
+************************************
+enable
+conf t
+no ip domain lookup
+int s 1/1
+ip address 30.0.0.2 255.0.0.0
+description WAN3
+no shutdown
+bandwidth 128
+exit
+exit  
+copy r s
+
+enable
+conf t
+no ip domain lookup
+int s 0/0
+ip address 30.0.0.1 255.0.0.0
+description WAN3
+no shutdown
+bandwidth 128
+exit
+exit  
+copy r s
+
+40.0.0.0/8 – REDISTRIBUIÇÃO – REDE 4
+************************************
+enable
+conf t
+no ip domain lookup
+int s 1/0
+ip address 40.0.0.1 255.0.0.0
+description WAN4
+no shutdown
+bandwidth 128
+exit
+exit  
+copy r s
+
+enable
+conf t
+no ip domain lookup
+int s 1/2
+ip address 40.0.0.2 255.0.0.0
+description WAN4
+no shutdown
+bandwidth 128
+exit
+exit  
+copy r s
+
+
+50.0.0.0/8 – REDE 2 – REDE 4
+************************************
+enable
+conf t
+no ip domain lookup
+int s 0/0
+ip address 50.0.0.1 255.0.0.0
+description WAN2
+no shutdown
+bandwidth 128
+exit
+exit  
+copy r s
+
+enable
+conf t
+no ip domain lookup
+int s 1/1
+ip address 50.0.0.2 255.0.0.0
+description WAN2
+no shutdown
+bandwidth 128
+exit
+exit  
+copy r s
+
+
+60.0.0.0/8 – REDE 3 – REDE 4
+************************************
+enable
+conf t
+no ip domain lookup
+int s 0/1
+ip address 60.0.0.2 255.0.0.0
+description WAN4
+no shutdown
+bandwidth 128
+exit
+exit  
+copy r s
+
+enable
+conf t
+no ip domain lookup
+int s 1/0
+ip address 60.0.0.1 255.0.0.0
+description WAN4
+no shutdown
+bandwidth 128
+exit
+exit  
+copy r s
+
+ROTEADOR4 OSPF
+**************
+
+enable
+conf t
+no ip domain lookup
+int s 0/1
+ROUTER OSPF 20
+NETWORK 60.0.0.0 0.255.255.255 0
+
+enable
+conf t
+no ip domain lookup
+int s 0/0
+ROUTER OSPF 20
+NETWORK 30.0.0.0 0.255.255.255 0
+NETWORK 30.0.0.0 0.255.255.255 0
+
+
+
+
