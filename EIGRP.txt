@@ -1,0 +1,74 @@
+RIP
+---->CLASSFULL só identifica mascara padrao
+
+OSPF 
+---->CLASSLESS identifica de acordo com o que se configurar
+
+EIGRP
+---->
+->router eigrp <SA>
+->no auto-summary
+->network<IP>
+
+________
+ROUTER01
+********
+enable
+conf t
+int f 0/0
+ip address 192.168.1.1 (gateway)
+description LAN01
+no shutdown
+exit
+exit
+copy r s
+
+enable
+conf t
+int s 0/0
+ip address 176.20.100.1 (ou 1.0.0.1 um ip da WAN)
+description WAN01
+no shutdown
+bandwidth 128
+clock rate 128000 (só no principal)
+exit
+exit
+copy r s
+
+enable
+conf t
+router eigrp 1
+no auto-summary
+network 192.168.1.0
+network 176.20.100.0
+
+________
+ROUTER02
+********
+enable
+conf t
+int f 0/0
+ip address 192.168.2.1 (gateway)
+description LAN01
+no shutdown
+exit
+exit
+copy r s
+
+enable
+conf t
+int s 0/0
+ip address 176.20.100.2 (ou 1.0.0.2 a seu criterio)
+description WAN01
+no shutdown
+bandwidth 128
+exit
+exit
+copy r s
+
+enable
+conf t
+router eigrp 1
+no auto-summary
+network 192.168.2.0
+network 176.20.100.0

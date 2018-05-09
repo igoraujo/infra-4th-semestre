@@ -1,0 +1,54 @@
+________
+EIGRP
+********
+A
+---
+enable
+conf t
+int f 0/0
+ip address 1172.16.1.1
+description REDE01
+no shutdown
+exit
+exit
+copy r s
+
+enable
+conf t
+int s 0/0
+ip address 200.200.10.1
+description WAN_A
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+exit
+copy r s
+
+
+
+enable
+conf t
+router eigrp 1
+no auto-summary
+network 200.200.10.0
+network 176.160.0.0
+network 206.100.0.0
+
+
+
+________
+RIP
+********
+
+
+
+________
+OSPF
+********
+
+
+
+________
+Estatico
+********
