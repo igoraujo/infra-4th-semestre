@@ -6,7 +6,7 @@ A
 enable
 conf t
 int f 0/0
-ip address 1172.16.1.1
+ip address 1172.16.1.1 255.255.255.0
 description REDE01
 no shutdown
 exit
