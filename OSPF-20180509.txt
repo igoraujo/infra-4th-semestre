@@ -1,0 +1,318 @@
+********
+ROUTER 1
+--------
+enable
+conf t
+
+int f 0/0
+no shutdown
+ip address 192.168.1.1 255.255.255.0
+exit
+
+int s 1/0
+no shutdown
+ip address 1.0.0.1 255.0.0.0
+band 64
+clock rate 64000
+exit
+
+int s 1/3
+no shutdown
+ip address 2.0.0.1 255.0.0.0
+band 128
+clock rate 128000
+exit
+
+int s 1/2
+no shutdown
+ip address 3.0.0.1 255.0.0.0
+band 64
+clock rate 64000
+exit
+
+int s 1/1
+no shutdown
+ip address 4.0.0.1 255.0.0.0
+band 256
+clock rate 256000
+exit
+
+exit
+copy r s
+
+*********
+ROUTER 2
+---------
+enable
+conf t
+
+int f 0/0
+no shutdown
+ip address 192.168.2.1 255.255.255.0
+exit
+
+int s 1/0
+no shutdown
+ip address 1.0.0.2 255.0.0.0
+band 64
+clock rate 64000
+exit
+
+int s 1/2
+no shutdown
+ip address 5.0.0.2 255.0.0.0
+band 64
+clock rate 64000
+exit
+
+int s 1/3
+no shutdown
+ip address 8.0.0.2 255.0.0.0
+band 128
+clock rate 128000
+exit
+
+int s 1/1
+no shutdown
+ip address 10.0.0.2 255.0.0.0
+band 128
+clock rate 128000
+exit
+
+exit
+copy r s
+
+*********
+ROUTER 4
+---------
+enable
+conf t
+
+int f 0/0
+no shutdown
+ip address 192.168.4.1 255.255.255.0
+exit
+
+int s 1/1
+no shutdown
+ip address 10.0.0.4 255.0.0.0
+band 128
+clock rate 128000
+exit
+
+int s 1/3
+no shutdown
+ip address 2.0.0.4 255.0.0.0
+band 128
+clock rate 128000
+exit
+
+int s 1/0
+no shutdown
+ip address 6.0.0.4 255.0.0.0
+band 64
+clock rate 64000
+exit
+
+int s 1/2
+no shutdown
+ip address 9.0.0.4 255.0.0.0
+band 256
+clock rate 256000
+exit
+
+exit
+copy r s
+
+*********
+ROUTER 5
+---------
+enable
+conf t
+
+int f 0/0
+no shutdown
+ip address 192.168.5.1 255.255.255.0
+exit
+
+int s 1/2
+no shutdown
+ip address 9.0.0.5 255.0.0.0
+band 256
+clock rate 256000
+exit
+
+int s 1/0
+no shutdown
+ip address 8.0.0.5 255.0.0.0
+band 128
+clock rate 128000
+exit
+
+int s 1/1
+no shutdown
+ip address 3.0.0.5 255.0.0.0
+band 64
+clock rate 64000
+exit
+
+int s 1/3
+no shutdown
+ip address 7.0.0.5 255.0.0.0
+band 256
+clock rate 256000
+exit
+
+exit
+copy r s
+
+*********
+ROUTER 3
+---------
+enable
+conf t
+
+int f 0/0
+no shutdown
+ip address 192.168.3.1 255.255.255.0
+exit
+
+int s 1/3
+no shutdown
+ip address 7.0.0.3 255.0.0.0
+band 256
+clock rate 256000
+exit
+
+int s 1/2
+no shutdown
+ip address 6.0.0.3 255.0.0.0
+band 64
+clock rate 64000
+exit
+
+int s 1/0
+no shutdown
+ip address 5.0.0.3 255.0.0.0
+band 64
+clock rate 64000
+exit
+
+int s 1/1
+no shutdown
+ip address 4.0.0.3 255.0.0.0
+band 256
+clock rate 256000
+exit
+
+exit
+copy r s
+--------------------------------------
+ROUTER OSPF
+***********
+enable 
+conf t
+router ospf 100
+
+no network 1.0.0.0 0.255.255.255 area 0
+no network 2.0.0.0 0.255.255.255 area 0
+no network 3.0.0.0 0.255.255.255 area 0
+no network 4.0.0.0 0.255.255.255 area 0
+no network 5.0.0.0 0.255.255.255 area 0
+no network 6.0.0.0 0.255.255.255 area 0
+no network 7.0.0.0 0.255.255.255 area 0
+no network 8.0.0.0 0.255.255.255 area 0
+no network 9.0.0.0 0.255.255.255 area 0
+no network 10.0.0.0 0.255.255.255 area 0
+
+________
+ROUTER 1
+********
+
+network 192.168.1.0 0.255.255.255 area 0
+network 1.0.0.0 0.255.255.255 area 0
+network 2.0.0.0 0.255.255.255 area 0
+network 3.0.0.0 0.255.255.255 area 0
+network 4.0.0.0 0.255.255.255 area 0
+exit
+
+exit
+copy r s
+________
+ROUTER 2
+********
+
+
+network 192.168.2.0 0.255.255.255 area 0
+network 1.0.0.0 0.255.255.255 area 0
+network 10.0.0.0 0.255.255.255 area 0
+network 5.0.0.0 0.255.255.255 area 0
+network 8.0.0.0 0.255.255.255 area 0
+exit
+
+exit
+copy r s
+
+________
+ROUTER 4
+********
+
+network 192.168.4.0 0.255.255.255 area 0
+network 6.0.0.0 0.255.255.255 area 0
+network 10.0.0.0 0.255.255.255 area 0
+network 9.0.0.0 0.255.255.255 area 0
+network 2.0.0.0 0.255.255.255 area 0
+exit
+
+exit
+copy r s
+
+________
+ROUTER 5
+********
+
+network 192.168.5.0 0.255.255.255 area 0
+network 8.0.0.0 0.255.255.255 area 0
+network 3.0.0.0 0.255.255.255 area 0
+network 9.0.0.0 0.255.255.255 area 0
+network 7.0.0.0 0.255.255.255 area 0
+exit
+
+exit
+copy r s
+________
+ROUTER 3
+********
+
+network 192.168.3.0 0.255.255.255 area 0
+network 5.0.0.0 0.255.255.255 area 0
+network 4.0.0.0 0.255.255.255 area 0
+network 6.0.0.0 0.255.255.255 area 0
+network 7.0.0.0 0.255.255.255 area 0
+exit
+
+exit
+copy r s
+-----------------------------------------
+
+enable
+conf t
+
+router ospf 100
+network 
+
+network 192.168.1.0 0.255.255.255
+network 1.0.0.0 0.255.255.255 area 0
+network 2.0.0.0 0.255.255.255 area 0
+network 3.0.0.0 0.255.255.255 area 0
+network 4.0.0.0 0.255.255.255 area 0
+network 5.0.0.0 0.255.255.255 area 0
+network 6.0.0.0 0.255.255.255 area 0
+network 7.0.0.0 0.255.255.255 area 0
+network 8.0.0.0 0.255.255.255 area 0
+network 9.0.0.0 0.255.255.255 area 0
+network 10.0.0.0 0.255.255.255 area 0
+
+exit
+exit
+copy r s
