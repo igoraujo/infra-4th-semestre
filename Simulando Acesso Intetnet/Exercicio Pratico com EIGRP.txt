@@ -1,0 +1,62 @@
+enable
+conf t
+int f 0/0
+ip address 192.168.100.1 255.255.255.0
+description REDE01-BH
+no shutdown
+exit
+exit
+copy r s
+
+enable
+conf t
+int f 0/1
+ip address 192.168.200.1 255.255.255.0
+description REDE01-SP
+no shutdown
+exit
+exit
+copy r s
+
+enable
+conf t
+int s 0/0
+ip address 1.0.0.1 255.0.0.0
+description REDE01-Serial
+no shutdown
+exit
+exit
+copy r s
+
+-------------------------------------------------------
+
+enable
+conf t
+int f 0/0
+ip address 172.10.0.1 255.255.255.0
+description REDE01-BH
+no shutdown
+exit
+exit
+copy r s
+
+
+enable
+conf t
+int s 0/0
+ip address 1.0.0.2 255.0.0.0
+description REDE01-Serial
+no shutdown
+exit
+exit
+copy r s
+
+
+
+enable
+conf t
+router eigrp 1
+no auto-summary
+no network 192.168.100.0
+no network 192.168.200.0
+network 172.10.0.0
