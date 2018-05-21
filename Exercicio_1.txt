@@ -1,0 +1,258 @@
+Rede 1
+IP: 172.16.1.0/24
+EIGRP
+==================
+enable
+conf t
+ip domain lookup
+int f 0/0
+ip address 172.16.1.1 255.255.0.0
+description REDE01
+no shutdown
+exit
+
+int s 0/0
+ip address 176.160.0.2 255.255.255.0
+description WAN_B
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+int s 0/1
+ip address 200.200.10.2 255.255.255.0
+description WAN_A
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+int s 1/1
+ip address 206.100.0.2 255.255.255.0
+description WAN_H
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+router eigrp 1
+no auto-summary
+network 176.16.1.0
+network 176.160.0.0
+network 206.100.0.0
+network 200.200.10.0
+exit
+
+exit
+copy r s
+
+
+-----------------------
+Rede 2
+IP: 192.168.0.0/24
+RIP
+-----------------------
+enable
+conf t
+ip domain lookup
+int f 0/0
+ip address 192.168.0.1 255.255.255.0
+description REDE02
+no shutdown
+exit
+
+int s 0/0
+ip address 176.160.0.3 255.255.255.0
+description WAN_B
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+int s 0/1
+ip address  5.0.0.3 255.0.0.0
+description WAN_C
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+int s 1/1
+ip address 1.0.0.2 255.0.0.0
+description WAN_G
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+router rip
+network 192.168.0.0
+network 176.160.0.0
+network 5.0.0.0
+network 1.0.0.0
+
+exit
+copy r s
+
+
+-----------------------
+Rede 3
+IP: 10.0.0.0/8
+OSPF
+-----------------------
+enable
+conf t
+ip domain lookup
+int f 0/0
+ip address 10.0.0.1 255.0.0.0
+description REDE03
+no shutdown
+exit
+
+int s 0/1
+ip address 5.0.0.2 255.0.0.0
+description WAN_C
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+int s 0/0
+ip address 13.0.0.2 255.0.0.0
+description WAN_D
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+int s 1/1
+ip address 201.30.19.2 255.255.255.0
+description WAN_E
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+router ospf 100
+network 10.0.0.0 0.255.255.255 area 0
+network 5.0.0.0 0.255.255.255 area 0
+network 13.0.0.0 0.255.255.255 area 0
+network 201.30.19.0 0.0.0.255 area 0
+
+exit
+copy r s
+
+
+-----------------------
+Rede 4
+IP: 192.168.20.0/24
+Estático
+-----------------------
+enable
+conf t
+ip domain lookup
+int f 0/0
+ip address 192.168.20.1 255.255.255.0
+description REDE04
+no shutdown
+exit
+
+int s 0/1
+ip address 200.200.10.3 255.255.255.0
+description WAN_A
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+int s 0/0
+ip address 13.0.0.3 255.0.0.0
+description WAN_D
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+int s 1/1
+ip address 178.34.0.2 255.255.0.0
+description WAN_F
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+ip route 172.16.1.0 255.255.255.0 serial 0/1
+ip route 192.168.0.0 255.255.255.0 serial 1/1
+ip route 10.0.0.0 255.0.0.0 serial 0/0
+
+exit
+copy r s
+
+-----------------------
+Redistribuidor
+-----------------------
+
+enable
+conf t
+no ip domain lookup
+int s 1/0
+ip address 206.100.0.0 255.255.255.0
+description WAN1
+no shutdown
+bandwidth 128
+exit
+
+enable
+conf t
+no ip domain lookup
+int s 1/1
+ip address 1.0.0.3 255.0.0.0
+description WAN2
+no shutdown
+bandwidth 128
+exit
+
+enable
+conf t
+no ip domain lookup
+int s 1/2
+ip address 201.30.19.3 255.255.255.0
+description WAN3
+no shutdown
+bandwidth 128
+exit
+
+enable
+conf t
+no ip domain lookup
+int s 1/3
+ip address 178.34.0.3 255.255.0.0
+description WAN4
+no shutdown
+bandwidth 128
+exit
+
+router eigrp 1
+no auto-summary
+network 206.100.0.0
+network 1.0.0.0
+network 201.30.19.0
+network 178.34.0.0
+exit
+
+router ospf 100
+network 206.100.0.0 0.0.0.255 area 0
+network 1.0.0.0 0.255.255.255 area 0
+network 201.30.19.0 0.0.0.255 area 0
+network 178.34.0.0 0.0.255.255 area 0
+
+router rip
+network 206.100.0.0
+network 1.0.0.0
+network 201.30.19.0
+network 178.34.0.0
+
+ip route 172.16.1.0 255.255.255.0 serial 1/0
+ip route 192.168.0.0 255.255.255.0 serial 1/1
+ip route 10.0.0.0 255.0.0.0 serial 1/2
+ip route 192.168.20.0 255.0.0.0 serial 1/3

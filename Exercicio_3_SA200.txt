@@ -1,0 +1,109 @@
+enable
+conf t
+ip domain lookup
+int f 0/0
+ip address 172.16.40.1 255.255.255.0
+description SA100
+no shutdown
+exit
+
+int s 0/0
+ip address 4.0.0.2 255.0.0.0
+description WAN_4.0.0.0/8
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+int s 0/1
+ip address 6.0.0.3 255.0.0.0
+description WAN_6.0.0.0/8
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+router eigrp 100
+no auto-summary
+network 4.0.0.0
+network 6.0.0.0
+network 172.16.40.0
+exit
+
+exit
+copy r s
+
+------------------------------------
+
+enable
+conf t
+ip domain lookup
+int f 0/0
+ip address 172.16.50.1 255.255.255.0
+description SA100
+no shutdown
+exit
+
+int s 0/0
+ip address 5.0.0.2 255.0.0.0
+description WAN_5.0.0.0/8
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+int s 0/1
+ip address 4.0.0.3 255.0.0.0
+description WAN_4.0.0.0/8
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+router eigrp 100
+no auto-summary
+network 4.0.0.0
+network 5.0.0.0
+network 172.16.50.0
+exit
+
+exit
+copy r s
+
+------------------------------------
+
+enable
+conf t
+ip domain lookup
+int f 0/0
+ip address 172.16.60.1 255.255.255.0
+description SA100
+no shutdown
+exit
+
+int s 0/0
+ip address 6.0.0.2 255.0.0.0
+description WAN_6.0.0.0/8
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+int s 0/1
+ip address 5.0.0.3 255.0.0.0
+description WAN_5.0.0.0/8
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+router eigrp 100
+no auto-summary
+network 5.0.0.0
+network 6.0.0.0
+network 172.16.60.0
+exit
+
+exit
+copy r s
+
