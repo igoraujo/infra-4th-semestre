@@ -62,7 +62,7 @@ no shutdown
 exit
 
 int s 0/1
-ip address 2.0.0.2 255.0.0.0
+ip address 2.0.0.3 255.0.0.0
 description REDISTRIBUICAO_SP
 no shutdown
 bandwidth 128
