@@ -1,0 +1,134 @@
+**************
+BELO HORIZONTE
+--------------
+-----OSPF-----
+
+enable
+conf t
+
+int f 0/0
+ip address 172.10.0.1 255.255.0.0
+no shutdown
+exit
+
+int f 0/1
+ip address 172.20.0.1 255.255.0.0
+no shutdown
+exit
+
+int f 1/0
+no shutdown
+ip address 172.30.0.1 255.255.0.0
+exit
+
+int s 0/0
+ip address 1.0.0.1 255.0.0.0
+description REDISTRIBUICAO_BH
+no shutdown
+band 128
+clock rate 128000
+exit
+
+router ospf 100
+
+network 172.10.0.0 0.0.255.255 area 0
+network 172.20.0.0 0.0.255.255 area 0
+network 172.30.0.0 0.0.255.255 area 0
+network 1.0.0.0 0.255.255.255 area 0
+exit
+
+exit
+copy r s
+----------------------------------
+
+**************
+  SAO PAULO
+--------------
+----EIGRP-----
+
+enable
+conf t
+
+int f 0/0
+ip address 192.168.10.1 255.255.255.0
+description ROSA
+no shutdown
+exit
+
+int f 0/1
+ip address 192.168.20.1 255.255.255.0
+description LARANJA
+no shutdown
+exit
+
+int s 0/1
+ip address 2.0.0.2 255.0.0.0
+description REDISTRIBUICAO_SP
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+enable
+conf t
+router eigrp 1
+no auto-summary
+network 192.168.10.0
+network 192.168.20.0
+network 2.0.0.0
+exit
+
+exit
+copy r s
+
+-------------------------------
+REDISTRIBUICAO
+
+enable
+conf t
+int s 0/0
+ip address 10.0.0.1 255.0.0.0
+description REDISTRIBUICAO_BH
+no shutdown
+exit
+
+router ospf 100
+
+network 1.0.0.2 0.0.0.255 area 0
+network 2.0.0.2 0.0.0.255 area 0
+exit
+
+
+int s 0/1
+ip address 2.0.0.2 255.0.0.0
+description REDISTRIBUICAO_SP
+no shutdown
+bandwidth 128
+clock rate 128000
+exit
+
+router eigrp 1
+no auto-summary
+network 2.0.0.0
+network 1.0.0.0
+exit
+
+no network 192.168.10.0
+no network 192.168.20.0
+
+
+ROUTER EIGRP 1
+REDISTRIBUTE OSPF 100 METRIC 10000 100 255 1 1500
+exit
+
+
+ROUTER OSPF 100
+REDISTRIBUTE EIGRP 1 METRIC 100 SUBNETS
+exit
+
+exit
+copy r s
+
+
+
+
