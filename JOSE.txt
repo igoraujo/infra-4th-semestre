@@ -1,0 +1,172 @@
+Sempre colocar mode trunk no switch para o roteador
+
+configurando vlan:
+
+enable
+configure terminal
+no ip domain lookup
+hostname <nome>
+vlan <10>
+name <nome>
+interface fastethernet 0/1    // config todas as portas necessarias
+/*****OUTRA FORMA PARA NÃO TER QUE IR PORTA A PORTA IGUAL NA LINHA ACIMA*******/
+int range fast 0/1-7
+/*****************************************************************************/
+switchport access vlan <nome>  // idem de cima
+exit , exit
+sw // salvar
+
+------------------------------------------------------
+
+
+
+configurando switch <=> roteador:
+
+enable
+configure terminal
+no ip domain lookup
+interface fastethernet 0/0
+ip address 192.168.0.1 255.255.255.248
+description porta_lan_bh
+no shutdown // para ligar a porta 
+copy r s  //salvar
+----------------------------------------------------------
+confirando roteador <=> roteador:
+
+enable
+configure terminal
+no ip domain lookup
+interface serial 0/0
+ip address 200.100.30.1 255.255.255.252
+description porta_wan_bh-sp
+no shutdownredi
+bandwidth 128
+clock rate 128000
+copy r s 
+
+configurar rotas rip: nos 2 roteadores
+
+enable 
+configure terminal
+router rip
+network 192.168.20.0     // de acordo com a rede da lan
+network 200.100.30.0    //nas duas configura a msm coisa
+copy r s
+-----------------------------------------------------------------------
+Configuração VTP
+switch <=> switch(Por enlace)
+int f0/24
+switchport mode trunk
+
+/****PRIMEIRO SWITCH******/
+Habilitar vtp server
+
+vtp mode server
+vtp domain <nome>
+vtp password <senha>
+vtp version 2
+copy r s
+/****PRIMEIRO SWITCH******/
+/****SEGUNDO E DEMAIS SWITCHS******/
+vtp mode client
+vtp password <senha do vtp server>
+copy r s
+/****SEGUNDO E DEMAIS SWITCHS******/
+-----------------------------------------------------------------------
+Etherchannel
+/****SWITCH PRIMÁRIO******/
+int range f 0/21-24
+channel-protocol PAGP
+channel-group 1(cada enlace é um grupo) mode desirable
+switchport mode trunk
+salvar
+/****SWITCH PRIMÁRIO******/
+/****SWITCH SECUNDÁRIO****/
+int range f 0/21-24
+channel-protocol PAGP
+channel-group 1(cada enlace é um grupo) mode auto
+switchport mode trunk
+/****SWITCH SECUNDÁRIO****/
+----------------------------------------------------------------------
+Roteamento entre vlan's (no roteador)
+int f 0/0
+no shutdown
+exit
+
+int f 0/0.5
+encapsulation dot1q <nro_vlan>
+ip address <primeiro ip válido da rede da vlan + máscara>
+
+----------------------------------------------------------------------
+Roteamento Estático
+ip route <rede destino LAN><mascara><interface saída> (ex: ip route 10.0.0.0 255.0.0.0 serial 0/0)
+----------------------------------------------------------------------
+Redistribuição de roteamento
+* Placa NM 4A/s em todos os roteadores
+* adiconar um roteador central para redistruibuição
+* Configurar os tipos de roteamento no roteador de redistruibuição
+
+Router RIP
+ - Redistribute static metric 1
+ - Redistribute OSPF<PID> metric 1
+ - Redistribute EIGRP<nº SA> metric 1
+
+Router OSPF
+ - Redistribute static metric <NR>(NR = quantas subredes eu quero que faça parte, pode colocar um acima de 200) subnets
+ - Redistribute RIP metric <NR>(NR = quantas subredes eu quero que faça parte, pode colocar um acima de 200) subnets
+ - redistribute EIGRP<nº SA> metric 200 subnets
+
+Router EIGRP<nº SA>
+ - redistribute static metric 10000(banda) 100(delay) 255(confiabilidade) 1(metrica) 1500(tamanho pacote)
+ - redistribute OSPF<PID> metric 10000 100 255 1 1500
+ - redistribute rip metric 10000 100 255 1 1500
+
+----------------------------------------------------------------------
+Roteamento OSPF
+router ospf <PID> (PID é uma identificação númerica entra 0 e 999)
+ntework<ips redes configuradas no roteador><máscara coringa> area <numero area>(todos os roteadores tem que estar na mesma área)
+= Máscara coringa => 255.255.255.255 - (subtração) máscara
+
+----------------------------------------------------------------------
+Roteamento EIGRP
+
+router EIGRP <nº SA> (Número igual para todos os roteadores que estão "juntos")
+no auto-summary
+network <rede> (redes configuradas no roteador)
+----------------------------------------------------------------------
+Firewall
+
+ - Habilitar configuração remota
+	line vty 0 15
+	password <senha>
+ 	login 
+	enable secret <senha>
+
+ - Acessar roteador remoto
+	- Abrir computador no prompt
+		telnet <ip>
+
+ - Apenas 1 IP ter acesso remoto (Comandos ACL)
+	access-list <nr lista>(0-99 padrão) permit <ip> <mascara coringa>
+	line vty 0 15
+	access-class <nr lista> in
+
+ - Proibir todos os Ips da rede
+	access-list <nr lista (não padrão -> acima de 100)> DENY IP <ip origem> <mascara coringa> <ip destino> <mascara coringa destino>
+	access-list <nr lista acima> permit ip any any
+	int f 0/1 (interface de onde irá ser negado o acesso)
+	ip access-group <nr lista acima> in
+
+ - Proibir acesso ao serviço www ou porta 80 
+	ip accedd-list extended <nome do serviço> (INTERNET)
+	deny tcp <ip origem> <mascara coringa origem> <ip destino> <mascara coringa destino> eq www
+	permit ip any any
+	int f 0/0 (interface de onde irá ser negado o acesso)
+	ip access-group <nr lista acima> in
+	
+---------------------------------------------------------------------
+observaçoes: 
+* nunca usar primeiro ip valido
+* configurar gateway com primeiro IP válido
+* 
+

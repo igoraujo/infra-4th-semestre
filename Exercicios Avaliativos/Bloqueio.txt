@@ -1,0 +1,47 @@
+Bloqueio
+************
+
+TODOS ROTEADORES
+=================
+
+line vty 0 15
+password senha123
+login
+enable secret conft
+
+access-list 10 permit 192.168.10.2 0.0.0.0
+line vty 0 15
+
+access-class 10 in
+
+-------------------
+BH
+===
+
+ENABLE
+CONF T
+
+IP ACCESS-LIST EXTENDED INTERNET
+
+DENY TCP 172.30.0.0 0.0.255.255 172.10.0.2 0.0.255.255 EQ 80
+PERMIT IP ANY ANY
+exit
+exit
+copy r s
+
+
+ENABLE
+CONF T
+
+access-list 100 deny IP 192.18.20.0 0.0.0.255 172.10.0.3 0.0.0.0
+access-lista 100 permit IP any any
+EXIT
+INT F0/1
+IP ACCESS-GROUP 100 IN
+
+-------------------------------------------------------------------
+
+
+
+
+
