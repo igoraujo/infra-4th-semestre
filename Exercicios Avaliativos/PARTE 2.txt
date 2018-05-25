@@ -1,2 +1,17 @@
 PARTE 2
 =========
+Exercício Avaliativo – Parte II 
+  
+Acrescentar a rede do Rio de Janeiro conforme informações abaixo: 
+- 1 Roteador (Configurar roteamento ESTÁTICO) 
+- 1 Switch 
+- 1 Servidor (configurá-lo como DHCP) 
+- 5 PCs 
+LAN: 10.0.0.0/12 
+WAN: 3.0.0.0/8 
+- Esta rede deve comunicar-se com as demais. 
+- O servidor DHCP não pode ter acesso ao servidor de Arquivos nem acesso à Internet 
+- O computador E, e somente ele, pode conectar-se remotamente a este roteador. 
+  
+IMPORTANTE 
+Informem no projeto qual é a senha dos roteadores. 
