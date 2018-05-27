@@ -1,0 +1,102 @@
+VLANs
+======
+
+SW_Recife
+-------------------
+
+enable
+conf t
+hostname SW_RE
+
+vlan 5
+name TI
+exit
+
+vlan 10
+name RECEPCAO
+exit
+
+vlan 20
+name COMERCIAL
+exit
+
+vlan 50
+name DIRETORIA
+exit
+
+int f 0/24
+switchport mode trunk
+exit
+
+int f 0/1
+switchport mode trunk
+exit
+
+int f 0/5
+switchport mode trunk
+exit
+
+vtp mode server
+vtp domain SW_RE
+vtp password senha123
+vtp version 2
+exit
+
+exit
+WR
+
+++++++++++++++++++++++++++
+
+RE_SW_1Andar
+------------
+
+enable
+conf t
+hostname RE_SW_1ANDAR
+
+vtp mode client
+vtp password senha123
+
+int f 0/24
+switchport mode trunk
+exit
+
+int f 0/1
+switchport access vlan 10
+exit
+
+int f 0/2
+switchport access vlan 50
+exit
+
+exit
+wr
+
+++++++++++++++++++++++++++
+
+RE_SW_2Andar
+------------
+
+enable
+conf t
+hostname RE_SW_1ANDAR
+
+vtp mode client
+vtp password senha123
+
+int f 0/24
+switchport mode trunk
+exit
+
+int f 0/1
+switchport access vlan 5
+exit
+
+int f 0/2
+switchport access vlan 20
+exit
+
+exit
+wr
+
+++++++++++++++++++++++++++

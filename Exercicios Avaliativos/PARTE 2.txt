@@ -8,10 +8,46 @@ Acrescentar a rede do Rio de Janeiro conforme informações abaixo:
 - 1 Servidor (configurá-lo como DHCP) 
 - 5 PCs 
 LAN: 10.0.0.0/12 
-WAN: 3.0.0.0/8 
+WAN: /8 
 - Esta rede deve comunicar-se com as demais. 
 - O servidor DHCP não pode ter acesso ao servidor de Arquivos nem acesso à Internet 
 - O computador E, e somente ele, pode conectar-se remotamente a este roteador. 
   
 IMPORTANTE 
 Informem no projeto qual é a senha dos roteadores. 
+
+
+ip route <rede destino LAN><mascara><interface saída> (ex: ip route 10.0.0.0 255.0.0.0 serial 0/0)
+
+enable
+conf t
+ip route 172.10.0.0 255.255.0.0 serial 0/0
+ip route 172.20.0.0 255.255.0.0 serial 0/0
+ip route 172.30.0.0 255.255.0.0 serial 0/0
+
+ip route 192.168.10.0 255.255.255.0 serial 0/0
+ip route 192.168.20.0 255.255.255.0 serial 0/0
+
+exit
+exit
+copy r s
+--------------------------------------------------
+REDISTRIBUIDOR
+==============
+
+enable
+conf t
+ip route 10.0.0.0 255.240.0.0 serial 0/0
+exit
+
+ROUTER EIGRP 1
+REDISTRIBUTE STATIC METRIC 10000 100 255 1 1500
+exit
+
+
+ROUTER OSPF 100
+REDISTRIBUTE STATIC METRIC 200 SUBNETS
+exit
+copy r s
+
+

@@ -1,0 +1,81 @@
+ROUTERS
+=======
+
+Router_Recife
+--------------------
+
+enable
+conf t
+hostname ROUTER_RE
+int f 0/0
+no shutdown
+exit
+
+int f 0/0.5
+encapsulation DOT1Q 5
+ip address 172.5.0.1 255.255.224.0
+exit
+
+int f 0/0.10
+encapsulation DOT1Q 10
+ip address 172.10.0.1 255.255.224.0
+exit
+
+int f 0/0.20
+encapsulation DOT1Q 20
+ip address 172.20.0.1 255.255.224.0
+exit
+
+int f 0/0.50
+encapsulation DOT1Q 50
+ip address 172.50.0.1 255.255.224.0
+exit
+
+exit
+copy r s
+
++++++++++++++++++++++++++++++++++++++++
+
+Roteador em Recife
+IP WAN RECIFE-BH: 220.200.30.2 /30
+IP WAN RECIFE-MANAUS: 11.0.0.2 /29
+ROTEAMENTO OSPF
+==================================
+
+enable
+conf t
+
+int f 0/0
+no shutdown
+ip address 172.16.10.1 255.255.224.0
+exit
+
+int s 0/0
+no shutdown
+ip address 11.0.0.2 255.255.255.248
+band 64
+clock rate 64000
+exit
+
+router ospf 100
+
+no network 11.0.0.0 0.0.0.7 area 0
+no network 220.200.30.0 0.0.0.3 area 0
+
+no network 20.0.0.0 0.0.0.255 area 0
+no network 30.0.0.0 0.0.0.255 area 0
+no network 40.0.0.0 0.0.0.255 area 0
+
+exit
+copy r s
+
+
+
+
+
+
+
+
+
+
+

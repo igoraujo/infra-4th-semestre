@@ -1,0 +1,42 @@
+ROUTERS
+=======
+
+Router_Belohorizonte
+--------------------
+
+enable
+conf t
+hostname ROUTER_BH
+int f 0/0
+no shutdown
+exit
+
+int f 0/0.5
+encapsulation DOT1Q 5
+ip address 192.168.5.1 255.255.255.248
+exit
+
+int f 0/0.10
+encapsulation DOT1Q 10
+ip address 192.168.10.1 255.255.255.248
+exit
+
+int f 0/0.20
+encapsulation DOT1Q 20
+ip address 192.168.20.1 255.255.255.248
+exit
+
+int f 0/0.30
+encapsulation DOT1Q 30
+ip address 192.168.30.1 255.255.255.248
+exit
+
+int f 0/0.40
+encapsulation DOT1Q 40
+ip address 192.168.40.1 255.255.255.248
+exit
+
+exit
+copy r s
+
++++++++++++++++++++++++++++++++++++++++

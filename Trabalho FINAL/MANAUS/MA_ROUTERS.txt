@@ -1,0 +1,22 @@
+Roteador em Manaus
+IP WAN MANAUS-RECIFE: 11.0.0.1 /29
+ROTEAMENTO EIGRP
+==================================
+enable
+conf t
+ip domain lookup
+hostname ROUTER_MA
+int f 0/0
+ip address 10.0.0.1 255.254.0.0
+description LAN_MANUS
+no shutdown
+exit
+
+router eigrp 1
+no auto-summary
+network 10.0.0.0
+network 11.0.0.0
+exit
+
+exit
+copy r s
