@@ -46,15 +46,25 @@ enable
 conf t
 
 int f 0/0
+description LAN_RECIFE
 no shutdown
 ip address 172.16.10.1 255.255.224.0
 exit
 
 int s 0/0
+description WAN_RECIFE_MANAUS
 no shutdown
-ip address 11.0.0.2 255.255.255.248
-band 64
-clock rate 64000
+ip address 11.0.0.2 255.255.224.0
+band 128
+clock rate 128000
+exit
+
+int s 1/0
+description WAN_RECIFE_BELOHORIZONTE
+no shutdown
+ip address 220.200.30.2 255.255.255.252
+band 128
+clock rate 128000
 exit
 
 router ospf 100
@@ -62,13 +72,16 @@ router ospf 100
 no network 11.0.0.0 0.0.0.7 area 0
 no network 220.200.30.0 0.0.0.3 area 0
 
-no network 20.0.0.0 0.0.0.255 area 0
-no network 30.0.0.0 0.0.0.255 area 0
 no network 40.0.0.0 0.0.0.255 area 0
 
+network 172.5.0.0 0.0.31.255 area 0
+network 172.10.0.0 0.0.31.255 area 0
+network 172.20.0.0 0.0.31.255 area 0
+network 172.30.0.0 0.0.31.255 area 0
+network 172.40.0.0 0.0.31.255 area 0
+network 172.50.0.0 0.0.31.255 area 0
 exit
 copy r s
-
 
 
 
