@@ -36,6 +36,11 @@ encapsulation DOT1Q 40
 ip address 192.168.40.1 255.255.255.248
 exit
 
+int f 0/0.50
+encapsulation DOT1Q 50
+ip address 192.168.50.1 255.255.255.248
+exit
+
 exit
 copy r s
 

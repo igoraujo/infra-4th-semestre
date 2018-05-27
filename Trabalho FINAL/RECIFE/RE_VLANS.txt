@@ -20,6 +20,14 @@ vlan 20
 name COMERCIAL
 exit
 
+vlan 30
+name FINANCEIRO
+exit
+
+vlan 40
+name CONTABILIDADE
+exit
+
 vlan 50
 name DIRETORIA
 exit

@@ -28,6 +28,10 @@ vlan 40
 name CONTABILIDADE
 exit
 
+vlan 50
+name DIRETORIA
+exit
+
 int f 0/24
 switchport mode trunk
 exit
