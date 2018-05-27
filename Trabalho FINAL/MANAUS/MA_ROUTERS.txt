@@ -12,6 +12,12 @@ description LAN_MANUS
 no shutdown
 exit
 
+int s 0/1
+ip address 11.0.0.1 255.254.0.0
+description WAN_MANAUS_RECIFE
+no shutdown
+exit
+
 router eigrp 1
 no auto-summary
 network 10.0.0.0

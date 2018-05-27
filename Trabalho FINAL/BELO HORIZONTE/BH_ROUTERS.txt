@@ -40,3 +40,37 @@ exit
 copy r s
 
 +++++++++++++++++++++++++++++++++++++++
+
+
+Roteador em BH
+IP WAN BH-RECIFE: 220.200.30.1 /30 (REDISTRIBUIDOR)
+ROTEAMENTO RIP
+==================================
+
+enable
+conf t
+
+int s 0/0
+description WAN_BELOHORIZONTE_REDISTRIBUIDOR
+no shutdown
+ip address 220.200.30.1 255.255.255.252
+band 128
+clock rate 128000
+exit
+
+router rip
+network 192.168.5.0
+network 192.168.10.0
+network 192.168.20.0
+network 192.168.30.0
+network 192.168.40.0
+network 192.168.50.0
+network 220.200.30.0
+exit
+
+exit
+copy r s
+
+
+
+
