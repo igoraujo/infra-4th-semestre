@@ -47,21 +47,13 @@ copy r s
 +++++++++++++++++++++++++++++++++++++++
 
 Roteador em Recife
-IP WAN RECIFE-BH: 220.200.30.2 /30 (REDISTRIBUIDOR 40.0.0.0/8)
+IP WAN RECIFE-BH: 220.200.30.2 /30
 IP WAN RECIFE-MANAUS: 11.0.0.2 /29
 ROTEAMENTO OSPF
 ==================================
 
 enable
 conf t
-
-int s 0/1
-description WAN_RECIFE_BELOHORIZONTE
-no shutdown
-ip address 40.0.0.2 255.0.0.0
-band 128
-clock rate 128000
-exit
 
 router ospf 100
 network 172.5.0.0 0.0.31.255 area 0
@@ -70,12 +62,51 @@ network 172.20.0.0 0.0.31.255 area 0
 network 172.30.0.0 0.0.31.255 area 0
 network 172.40.0.0 0.0.31.255 area 0
 network 172.50.0.0 0.0.31.255 area 0
-network 40.0.0.0 0.255.255.255 area 0
 exit
 
 exit
 copy r s
 
 
+enable
+conf t
+int s 0/1
+ip address 11.0.0.2 255.254.0.0
+description WAN_BELOHORIZONTE_MANAUS
+no shutdown
+band 128
+clock rate 128000
+exit
 
+int s 0/0
+ip address 220.200.30.2 255.255.255.252
+description WAN_RECIFE_BELOHORIZONTE
+no shutdown
+band 128
+clock rate 128000
+exit
+
+router eigrp 1
+auto-summary
+redistribute rip metric 10000 10 255 1 1500 
+redistribute ospf 100 metric 10000 100 255 1 1500 
+network 11.0.0.0
+network 220.200.30.0
+exit
+
+router ospf 100
+redistribute rip metric 200 subnets 
+redistribute eigrp 1 metric 100 subnets 
+network 11.0.0.0 0.0.0.7 area 0
+network 220.200.30.0 0.0.0.3 area 0
+exit
+
+router rip
+redistribute eigrp 1 metric 1 
+redistribute ospf 100 metric 1 
+network 220.200.30.0
+exit
+
+exit  
+copy r s
 
