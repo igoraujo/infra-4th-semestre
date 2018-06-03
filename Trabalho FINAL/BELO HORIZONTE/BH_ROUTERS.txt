@@ -1,7 +1,7 @@
 ROUTERS
 =======
 
-Router_Belohorizonte
+Router_BeloHorizonte
 --------------------
 
 enable
@@ -48,7 +48,7 @@ copy r s
 
 
 Roteador em BH
-IP WAN BH-RECIFE: 220.200.30.1 /30 (REDISTRIBUIDOR)
+IP WAN BH-RECIFE: 220.200.30.1 /30
 ROTEAMENTO RIP
 ==================================
 
@@ -56,7 +56,7 @@ enable
 conf t
 
 int s 0/0
-description WAN_BELOHORIZONTE_REDISTRIBUIDOR
+description WAN_BELOHORIZONTE_RECIFE
 no shutdown
 ip address 220.200.30.1 255.255.255.252
 band 128
